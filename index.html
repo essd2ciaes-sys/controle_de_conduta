@@ -30,12 +30,15 @@ body::before {
 
 /* HEADER */
 header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: linear-gradient(90deg, #000000, #171A4A);
     color: white;
-    padding: 15px;
-    text-align: center;
+    padding: 10px 30px;
     position: relative;
-    border-bottom: 15px solid  #808080;
+    border-bottom: 15px solid #808080;
+    min-height: 120px;
 }
 
 /* faixa horizontal 3 cores */
@@ -58,10 +61,28 @@ header::after {
     );
 }
 
-header img {
-    height: 60px;
-    margin: 5px;
-    filter: drop-shadow(0 0 5px black);
+/* título central */
+header h2 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* logos */
+.logo {
+    height: 120px;
+    filter: drop-shadow(0 0 6px black);
+}
+
+.esquerda {
+    margin-right: 10px;
+}
+
+.direita {
+    margin-left: 10px;
 }
 
 /* CARD */
@@ -219,9 +240,11 @@ async function enviarFormulario(e){
 <body>
 
 <header>
-    <img src="logo_pm.png">
-    <img src="logo_essd.png">
+    <img src="logo_pm.png" class="logo esquerda">
+
     <h2>CONTROLE DE CONDUTA ESCOLAR</h2>
+
+    <img src="logo_essd.png" class="logo direita">
 </header>
 
 <div class="container">
