@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Conduta Escolar</title>
 
 <style>
@@ -41,7 +42,7 @@ header {
     min-height: 120px;
 }
 
-/* faixa horizontal 3 cores */
+/* faixa horizontal */
 header::after {
     content: "";
     position: absolute;
@@ -49,7 +50,6 @@ header::after {
     left: 0;
     width: 100%;
     height: 9px;
-    display: block;
     background: linear-gradient(
         to bottom,
         #FF0000 0px,
@@ -61,7 +61,7 @@ header::after {
     );
 }
 
-/* título central */
+/* título */
 header h2 {
     flex: 1;
     text-align: center;
@@ -71,18 +71,9 @@ header h2 {
     font-weight: bold;
 }
 
-/* logos */
 .logo {
     height: 120px;
     filter: drop-shadow(0 0 6px black);
-}
-
-.esquerda {
-    margin-right: 10px;
-}
-
-.direita {
-    margin-left: 10px;
 }
 
 /* CARD */
@@ -93,22 +84,16 @@ header h2 {
     padding: 30px;
     border-radius: 10px;
     color: white;
-    box-shadow: 0 0 20px black;
-    animation: fadeIn 0.6s ease-in-out;
 }
 
-@keyframes fadeIn {
-    from {opacity:0; transform: translateY(20px);}
-    to {opacity:1;}
-}
-
+/* labels */
 label {
     display: block;
     margin-top: 18px;
     font-weight: bold;
 }
 
-/* CAMPOS PADRONIZADOS */
+/* campos */
 input, select, textarea {
     width: 100%;
     height: 42px;
@@ -121,32 +106,27 @@ input, select, textarea {
     font-size: 14px;
 }
 
-/* textarea maior */
+/* caixa alta automática */
+input[type="text"], textarea {
+    text-transform: uppercase;
+}
+
+/* textarea */
 textarea {
     height: 80px;
     resize: none;
 }
 
-/* remover setas do number */
+/* remover setas */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    margin: 0;
 }
-
 input[type=number] {
     -moz-appearance: textfield;
 }
 
-/* feedback visual */
-input:valid, textarea:valid {
-    border: 2px solid #00cc66;
-}
-
-input:invalid {
-    border: 2px solid #FF0000;
-}
-
+/* foco */
 input:focus, select:focus, textarea:focus {
     outline: none;
     background: #FFFFFF;
@@ -160,16 +140,8 @@ button {
     background: linear-gradient(90deg, #FF0000, #990000);
     color: white;
     border: none;
-    font-size: 16px;
     font-weight: bold;
     border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 10px #FF0000;
 }
 
 /* aviso */
@@ -189,9 +161,33 @@ footer {
     border-top: 2px solid red;
 }
 
+/* RESPONSIVO */
+@media (max-width: 600px) {
+
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .logo {
+        height: 80px;
+    }
+
+    header h2 {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    .container {
+        margin: 10px;
+        padding: 20px;
+    }
+}
+
 </style>
 
 <script>
+
 // máscara RE
 function formatarRE(campo) {
     let v = campo.value.replace(/\D/g,'');
@@ -200,11 +196,6 @@ function formatarRE(campo) {
     } else {
         campo.value = v;
     }
-}
-
-// somente letras
-function apenasLetras(e){
-    e.target.value = e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g,'');
 }
 
 // envio
@@ -222,6 +213,7 @@ async function enviarFormulario(e){
         codigo: codigo.value,
         ciencia: ciencia.value,
         anotante: anotante.value,
+        re_anotante: re_anotante.value,
         cargo: cargo.value
     };
 
@@ -233,6 +225,7 @@ async function enviarFormulario(e){
     alert("Registro enviado com sucesso!");
     document.querySelector("form").reset();
 }
+
 </script>
 
 </head>
@@ -240,11 +233,9 @@ async function enviarFormulario(e){
 <body>
 
 <header>
-    <img src="logo_pm.png" class="logo esquerda">
-
+    <img src="logo_pm.png" class="logo">
     <h2>CONTROLE DE CONDUTA ESCOLAR</h2>
-
-    <img src="logo_essd.png" class="logo direita">
+    <img src="logo_essd.png" class="logo">
 </header>
 
 <div class="container">
@@ -254,7 +245,7 @@ async function enviarFormulario(e){
 <input id="re" maxlength="8" oninput="formatarRE(this)" pattern="\d{6}-\d" required>
 
 <label>Nome de Guerra</label>
-<input id="nome" maxlength="20" oninput="apenasLetras(event)" required>
+<input id="nome" maxlength="20" required>
 
 <label>CIA</label>
 <select id="cia">
@@ -271,7 +262,7 @@ async function enviarFormulario(e){
 <input id="datahora" type="datetime-local" required>
 
 <label>Descrição de Conduta Infratora</label>
-<textarea id="descricao" maxlength="50" oninput="apenasLetras(event)" required></textarea>
+<textarea id="descricao" maxlength="50" required></textarea>
 
 <label>Cód. D-5 PM</label>
 <select id="codigo">
@@ -293,8 +284,11 @@ async function enviarFormulario(e){
 <label>Anotante</label>
 <input id="anotante" maxlength="50" required>
 
+<label>RE Anotante</label>
+<input id="re_anotante" maxlength="8" oninput="formatarRE(this)" required>
+
 <label>Cargo/Função</label>
-<input id="cargo" maxlength="20" oninput="apenasLetras(event)" required>
+<input id="cargo" maxlength="20" required>
 
 <div class="aviso">
 Artigo 128 da D-5-PM: Prazo de recurso de 24h após a ciência.
