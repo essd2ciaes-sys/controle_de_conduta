@@ -8,9 +8,7 @@
 <style>
 
 /* PADRONIZAÇÃO GLOBAL */
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -42,32 +40,20 @@ header {
     min-height: 120px;
 }
 
-/* faixa horizontal */
 header::after {
     content: "";
     position: absolute;
     bottom: 0;
-    left: 0;
     width: 100%;
     height: 9px;
-    background: linear-gradient(
-        to bottom,
-        #FF0000 0px,
-        #FF0000 3px,
-        #000000 3px,
-        #000000 6px,
-        #808080 6px,
-        #808080 9px
-    );
+    background: linear-gradient(to bottom,#FF0000 0,#FF0000 3px,#000000 3px,#000000 6px,#808080 6px,#808080 9px);
 }
 
-/* título */
 header h2 {
     flex: 1;
     text-align: center;
     margin: 0;
     font-size: 22px;
-    letter-spacing: 1px;
     font-weight: bold;
 }
 
@@ -86,14 +72,12 @@ header h2 {
     color: white;
 }
 
-/* labels */
 label {
     display: block;
     margin-top: 18px;
     font-weight: bold;
 }
 
-/* campos */
 input, select, textarea {
     width: 100%;
     height: 42px;
@@ -106,27 +90,23 @@ input, select, textarea {
     font-size: 14px;
 }
 
-/* caixa alta automática */
+/* MAIÚSCULO VISUAL */
 input[type="text"], textarea {
     text-transform: uppercase;
 }
 
-/* textarea */
 textarea {
     height: 80px;
     resize: none;
 }
 
 /* remover setas */
-input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
-input[type=number] {
-    -moz-appearance: textfield;
-}
+input[type=number] { -moz-appearance: textfield; }
 
-/* foco */
 input:focus, select:focus, textarea:focus {
     outline: none;
     background: #FFFFFF;
@@ -163,30 +143,17 @@ footer {
 
 /* RESPONSIVO */
 @media (max-width: 600px) {
-
-    header {
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .logo {
-        height: 80px;
-    }
-
-    header h2 {
-        font-size: 18px;
-        margin: 10px 0;
-    }
-
-    .container {
-        margin: 10px;
-        padding: 20px;
-    }
+    header { flex-direction: column; }
+    .logo { height: 80px; }
+    header h2 { font-size: 18px; margin: 10px 0; }
+    .container { margin: 10px; padding: 20px; }
 }
 
 </style>
 
 <script>
+
+const API_URL = "SUA_URL_SCRIPT";
 
 // máscara RE
 function formatarRE(campo) {
@@ -195,6 +162,57 @@ function formatarRE(campo) {
         campo.value = v.substring(0,6) + '-' + v.substring(6,7);
     } else {
         campo.value = v;
+    }
+}
+
+// letras maiúsculas reais
+function apenasLetras(e){
+    e.target.value = e.target.value
+        .replace(/[^A-Za-zÀ-ÿ\s]/g,'')
+        .toUpperCase();
+}
+
+// 🔵 AUTOPREENCHIMENTO ALUNO
+async function buscarAluno() {
+    const re = document.getElementById("re").value;
+
+    if(re.length < 8) return;
+
+    try {
+        const res = await fetch(API_URL + "?tipo=alunos");
+        const lista = await res.json();
+
+        const aluno = lista.find(a => a.re === re);
+
+        if(aluno){
+            nome.value = aluno.nome;
+            cia.value = aluno.cia;
+            pelotao.value = aluno.pelotao;
+            aluno.value = aluno.aluno;
+        }
+    } catch(e){
+        console.log("Erro GET alunos", e);
+    }
+}
+
+// 🔴 AUTOPREENCHIMENTO ANOTANTE
+async function buscarAnotante() {
+    const re = document.getElementById("re_anotante").value;
+
+    if(re.length < 8) return;
+
+    try {
+        const res = await fetch(API_URL + "?tipo=anotantes");
+        const lista = await res.json();
+
+        const anot = lista.find(a => a.re === re);
+
+        if(anot){
+            anotante.value = anot.nome;
+            cargo.value = anot.cargo;
+        }
+    } catch(e){
+        console.log("Erro GET anotantes", e);
     }
 }
 
@@ -217,7 +235,7 @@ async function enviarFormulario(e){
         cargo: cargo.value
     };
 
-    await fetch("COLE_URL_SCRIPT", {
+    await fetch(API_URL, {
         method: "POST",
         body: JSON.stringify(dados)
     });
@@ -242,10 +260,10 @@ async function enviarFormulario(e){
 <form onsubmit="enviarFormulario(event)">
 
 <label>RE</label>
-<input id="re" maxlength="8" oninput="formatarRE(this)" pattern="\d{6}-\d" required>
+<input id="re" maxlength="8" oninput="formatarRE(this)" onblur="buscarAluno()" required>
 
 <label>Nome de Guerra</label>
-<input id="nome" maxlength="20" required>
+<input id="nome" maxlength="20" oninput="apenasLetras(event)" required>
 
 <label>CIA</label>
 <select id="cia">
@@ -262,7 +280,7 @@ async function enviarFormulario(e){
 <input id="datahora" type="datetime-local" required>
 
 <label>Descrição de Conduta Infratora</label>
-<textarea id="descricao" maxlength="50" required></textarea>
+<textarea id="descricao" maxlength="50" oninput="apenasLetras(event)" required></textarea>
 
 <label>Cód. D-5 PM</label>
 <select id="codigo">
@@ -281,14 +299,14 @@ async function enviarFormulario(e){
 <label>Data e Hora da Ciência</label>
 <input id="ciencia" type="datetime-local" required>
 
-<label>Anotante</label>
-<input id="anotante" maxlength="50" required>
-
 <label>RE Anotante</label>
-<input id="re_anotante" maxlength="8" oninput="formatarRE(this)" required>
+<input id="re_anotante" maxlength="8" oninput="formatarRE(this)" onblur="buscarAnotante()" required>
+
+<label>Anotante</label>
+<input id="anotante" maxlength="50" oninput="apenasLetras(event)" required>
 
 <label>Cargo/Função</label>
-<input id="cargo" maxlength="20" required>
+<input id="cargo" maxlength="20" oninput="apenasLetras(event)" required>
 
 <div class="aviso">
 Artigo 128 da D-5-PM: Prazo de recurso de 24h após a ciência.
