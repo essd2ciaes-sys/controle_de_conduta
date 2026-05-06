@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Conduta Escolar</title>
+
+<style>
+
+/* PADRONIZAÇÃO GLOBAL */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('fundo_escola.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(23, 26, 74, 0.8);
+    z-index: -1;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #000000, #171A4A);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    border-bottom: 15px solid  #808080;
+}
+
+/* faixa horizontal 3 cores */
+header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 9px;
+    display: block;
+    background: linear-gradient(
+        to bottom,
+        #FF0000 0px,
+        #FF0000 3px,
+        #000000 3px,
+        #000000 6px,
+        #808080 6px,
+        #808080 9px
+    );
+}
+
+header img {
+    height: 60px;
+    margin: 5px;
+    filter: drop-shadow(0 0 5px black);
+}
+
+/* CARD */
+.container {
+    max-width: 850px;
+    margin: 40px auto;
+    background: rgba(0,0,0,0.9);
+    padding: 30px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 20px black;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1;}
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+}
+
+/* CAMPOS PADRONIZADOS */
+input, select, textarea {
+    width: 100%;
+    height: 42px;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #808080;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* textarea maior */
+textarea {
+    height: 80px;
+    resize: none;
+}
+
+/* remover setas do number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* feedback visual */
+input:valid, textarea:valid {
+    border: 2px solid #00cc66;
+}
+
+input:invalid {
+    border: 2px solid #FF0000;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    background: #FFFFFF;
+}
+
+/* BOTÃO */
+button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #FF0000, #990000);
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px #FF0000;
+}
+
+/* aviso */
+.aviso {
+    margin-top: 20px;
+    text-align: center;
+    color: #FF0000;
+    font-weight: bold;
+}
+
+/* footer */
+footer {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-top: 2px solid red;
+}
+
+</style>
+
+<script>
+// máscara RE
+function formatarRE(campo) {
+    let v = campo.value.replace(/\D/g,'');
+    if (v.length > 6) {
+        campo.value = v.substring(0,6) + '-' + v.substring(6,7);
+    } else {
+        campo.value = v;
+    }
+}
+
+// somente letras
+function apenasLetras(e){
+    e.target.value = e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g,'');
+}
+
+// envio
+async function enviarFormulario(e){
+    e.preventDefault();
+
+    const dados = {
+        re: re.value,
+        nome: nome.value,
+        cia: cia.value,
+        pelotao: pelotao.value,
+        aluno: aluno.value,
+        datahora: datahora.value,
+        descricao: descricao.value,
+        codigo: codigo.value,
+        ciencia: ciencia.value,
+        anotante: anotante.value,
+        cargo: cargo.value
+    };
+
+    await fetch("COLE_URL_SCRIPT", {
+        method: "POST",
+        body: JSON.stringify(dados)
+    });
+
+    alert("Registro enviado com sucesso!");
+    document.querySelector("form").reset();
+}
+</script>
+
+</head>
+
+<body>
+
+<header>
+    <img src="logo_pm.png">
+    <img src="logo_essd.png">
+    <h2>CONTROLE DE CONDUTA ESCOLAR</h2>
+</header>
+
+<div class="container">
+<form onsubmit="enviarFormulario(event)">
+
+<label>RE</label>
+<input id="re" maxlength="8" oninput="formatarRE(this)" pattern="\d{6}-\d" required>
+
+<label>Nome de Guerra</label>
+<input id="nome" maxlength="20" oninput="apenasLetras(event)" required>
+
+<label>CIA</label>
+<select id="cia">
+<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+</select>
+
+<label>Pelotão</label>
+<input id="pelotao" type="number" max="99" required>
+
+<label>Nº Aluno</label>
+<input id="aluno" type="number" max="99" required>
+
+<label>Data e Hora</label>
+<input id="datahora" type="datetime-local" required>
+
+<label>Descrição de Conduta Infratora</label>
+<textarea id="descricao" maxlength="50" oninput="apenasLetras(event)" required></textarea>
+
+<label>Cód. D-5 PM</label>
+<select id="codigo">
+<option>A1</option><option>B1</option><option>C1</option><option>C2</option><option>C3</option>
+<option>D1</option><option>D7</option><option>E1</option><option>E2</option><option>E3</option>
+<option>E4</option><option>E5</option><option>E6</option>
+<option>F1</option><option>F2</option><option>F3</option><option>F4</option>
+<option>F5</option><option>F6</option><option>F7</option>
+<option>G1</option><option>G2</option><option>G3</option><option>G4</option>
+<option>G5</option><option>G6</option><option>G7</option>
+<option>G10</option><option>G11</option>
+<option>H2</option><option>H3</option>
+<option>I2</option><option>I3</option>
+</select>
+
+<label>Data e Hora da Ciência</label>
+<input id="ciencia" type="datetime-local" required>
+
+<label>Anotante</label>
+<input id="anotante" maxlength="50" required>
+
+<label>Cargo/Função</label>
+<input id="cargo" maxlength="20" oninput="apenasLetras(event)" required>
+
+<div class="aviso">
+Artigo 128 da D-5-PM: Prazo de recurso de 24h após a ciência.
+</div>
+
+<button type="submit">REGISTRAR OCORRÊNCIA</button>
+
+</form>
+</div>
+
+<footer>
+© 2026 Polícia Militar do Estado de São Paulo - ESSD
+</footer>
+
+</body>
+</html>
