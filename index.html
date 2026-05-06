@@ -157,14 +157,14 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxkQnH7aHsnVgNOkiyByxr3
 
 // máscara RE
 function formatarRE(campo) {
-    let v = campo.value.replace(/\D/g,'');
+    let v = campo.value.toUpperCase().replace(/[^0-9A-Z]/g,'');
+
     if (v.length > 6) {
         campo.value = v.substring(0,6) + '-' + v.substring(6,7);
     } else {
         campo.value = v;
     }
 }
-
 // letras maiúsculas reais
 function apenasLetras(e){
     e.target.value = e.target.value
@@ -182,7 +182,9 @@ async function buscarAluno() {
         const res = await fetch(API_URL + "?tipo=alunos");
         const lista = await res.json();
 
-        const aluno = lista.find(a => a.re === re);
+        const aluno = lista.find(a => 
+    a.re.trim().toUpperCase() === re.trim().toUpperCase()
+);
 
         if(aluno){
             nome.value = aluno.nome;
@@ -205,8 +207,9 @@ async function buscarAnotante() {
         const res = await fetch(API_URL + "?tipo=anotantes");
         const lista = await res.json();
 
-        const anot = lista.find(a => a.re === re);
-
+        const anot = lista.find(a => 
+    a.re.trim().toUpperCase() === re.trim().toUpperCase()
+);
         if(anot){
             anotante.value = anot.nome;
             cargo.value = anot.cargo;
@@ -260,7 +263,8 @@ async function enviarFormulario(e){
 <form onsubmit="enviarFormulario(event)">
 
 <label>RE</label>
-<input id="re" maxlength="8" oninput="formatarRE(this)" onblur="buscarAluno()" required>
+<input id="re" maxlength="8" pattern="[0-9]{6}-[A-Z0-9]" 
+oninput="formatarRE(this)" onblur="buscarAluno()" required>
 
 <label>Nome de Guerra</label>
 <input id="nome" maxlength="20" oninput="apenasLetras(event)" required>
@@ -300,7 +304,8 @@ async function enviarFormulario(e){
 <input id="ciencia" type="datetime-local" required>
 
 <label>RE Anotante</label>
-<input id="re_anotante" maxlength="8" oninput="formatarRE(this)" onblur="buscarAnotante()" required>
+<input id="re_anotante" maxlength="8" pattern="[0-9]{6}-[A-Z0-9]" 
+oninput="formatarRE(this)" onblur="buscarAnotante()" required>
 
 <label>Anotante</label>
 <input id="anotante" maxlength="50" oninput="apenasLetras(event)" required>
