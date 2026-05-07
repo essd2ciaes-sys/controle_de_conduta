@@ -174,26 +174,40 @@ function apenasLetras(e){
 
 // 🔵 AUTOPREENCHIMENTO ALUNO
 async function buscarAluno() {
-    const re = document.getElementById("re").value;
 
-    if(re.length < 8) return;
+    const reDigitado = document.getElementById("re").value;
+
+    if(reDigitado.length < 8) return;
 
     try {
+
         const res = await fetch(API_URL + "?tipo=alunos");
         const lista = await res.json();
 
-        const aluno = lista.find(a => 
-    a.re.trim().toUpperCase() === re.trim().toUpperCase()
-);
+        const dadosAluno = lista.find(a =>
+            a.re.toString().trim().toUpperCase() ===
+            reDigitado.trim().toUpperCase()
+        );
 
-        if(aluno){
-            nome.value = aluno.nome;
-            cia.value = aluno.cia;
-            pelotao.value = aluno.pelotao;
-            aluno.value = aluno.aluno;
+        if(dadosAluno){
+
+            document.getElementById("nome").value =
+                dadosAluno.nome || "";
+
+            document.getElementById("cia").value =
+                dadosAluno.cia || "";
+
+            document.getElementById("pelotao").value =
+                dadosAluno.pelotao || "";
+
+            document.getElementById("aluno").value =
+                dadosAluno.aluno || "";
         }
+
     } catch(e){
+
         console.log("Erro GET alunos", e);
+
     }
 }
 
