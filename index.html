@@ -252,10 +252,11 @@ async function enviarFormulario(e){
         cargo: cargo.value
     };
 
-    await fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify(dados)
-    });
+   await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(dados),
+    mode: "no-cors"
+});
 
     alert("Registro enviado com sucesso!");
     document.querySelector("form").reset();
