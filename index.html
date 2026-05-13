@@ -317,6 +317,8 @@ function apenasLetras(e){
 }
 
 // 🔵 AUTOPREENCHIMENTO ALUNO
+
+let alunoValido = false;
 async function buscarAluno() {
 
     const reDigitado = document.getElementById("re").value;
@@ -333,21 +335,33 @@ async function buscarAluno() {
             reDigitado.trim().toUpperCase()
         );
 
-        if(dadosAluno){
+       if(dadosAluno){
 
-            document.getElementById("nome").value =
-                dadosAluno.nome || "";
+    alunoValido = true;
 
-            document.getElementById("cia").value =
-                dadosAluno.cia || "";
+    document.getElementById("nome").value =
+        dadosAluno.nome || "";
 
-            document.getElementById("pelotao").value =
-                dadosAluno.pelotao || "";
+    document.getElementById("cia").value =
+        dadosAluno.cia || "";
 
-            document.getElementById("aluno").value =
-                dadosAluno.aluno || "";
-        }
+    document.getElementById("pelotao").value =
+        dadosAluno.pelotao || "";
 
+    document.getElementById("aluno").value =
+        dadosAluno.aluno || "";
+
+}else{
+
+    alunoValido = false;
+
+    alert("RE NÃO CADASTRADO NA BASE DE ALUNOS");
+
+    nome.value = "";
+    cia.value = "";
+    pelotao.value = "";
+    aluno.value = "";
+}
     } catch(e){
 
         console.log("Erro GET alunos", e);
@@ -380,7 +394,13 @@ async function buscarAnotante() {
 // envio
 async function enviarFormulario(e){
     e.preventDefault();
+   
+   if(!alunoValido){
 
+    alert("NÃO É POSSÍVEL REGISTRAR. RE NÃO CADASTRADO.");
+
+    return;
+}
     const dados = {
         re: re.value,
         nome: nome.value,
