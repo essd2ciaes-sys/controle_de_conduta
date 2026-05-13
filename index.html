@@ -4,153 +4,297 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Conduta Escolar E-Anotação 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
-/* PADRONIZAÇÃO GLOBAL */
-* { box-sizing: border-box; }
+/* =========================
+   RESET
+========================= */
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: url('fundo_escola.jpg') no-repeat center center fixed;
-    background-size: cover;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-/* Overlay */
-body::before {
-    content: "";
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(23, 26, 74, 0.8);
-    z-index: -1;
+/* =========================
+   TEMA
+========================= */
+
+:root{
+
+    --bg:#F1F3F4;
+    --card:#FFFFFF;
+    --text:#202124;
+    --input:#F8F9FA;
+    --border:#DADCE0;
+
+    --primary:#171A4A;
+    --primary2:#FF0000;
+
+    --shadow:
+        0 1px 2px rgba(0,0,0,.08),
+        0 4px 12px rgba(0,0,0,.06);
+
 }
 
-/* HEADER */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(90deg, #000000, #171A4A);
-    color: white;
-    padding: 10px 30px;
-    position: relative;
-    border-bottom: 15px solid #808080;
-    min-height: 120px;
+/* DARK MODE */
+
+body.dark{
+
+    --bg:#111827;
+    --card:#1F2937;
+    --text:#F9FAFB;
+    --input:#374151;
+    --border:#4B5563;
+
+    --shadow:
+        0 2px 4px rgba(0,0,0,.3),
+        0 8px 24px rgba(0,0,0,.25);
+
 }
 
-header::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 9px;
-    background: linear-gradient(to bottom,#FF0000 0,#FF0000 3px,#000000 3px,#000000 6px,#808080 6px,#808080 9px);
+/* =========================
+   BODY
+========================= */
+
+body{
+
+    background:var(--bg);
+    color:var(--text);
+
+    font-family:'Inter',sans-serif;
+
+    min-height:100vh;
+
+    transition:.3s;
 }
 
-header h2 {
-    flex: 1;
-    text-align: center;
-    margin: 0;
-    font-size: 22px;
-    font-weight: bold;
+/* =========================
+   HEADER
+========================= */
+
+header{
+
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        #1E3A8A
+    );
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:18px 40px;
+
+    box-shadow:var(--shadow);
 }
 
-.logo {
-    height: 120px;
-    filter: drop-shadow(0 0 6px black);
+header h2{
+
+    font-size:24px;
+    font-weight:700;
+
+    letter-spacing:.5px;
 }
 
-/* CARD */
-.container {
-    max-width: 850px;
-    margin: 40px auto;
-    background: rgba(0,0,0,0.9);
-    padding: 30px;
-    border-radius: 10px;
-    color: white;
+.logo{
+
+    height:90px;
 }
 
-label {
-    display: block;
-    margin-top: 18px;
-    font-weight: bold;
+/* =========================
+   CARD
+========================= */
+
+.container{
+
+    max-width:900px;
+
+    margin:40px auto;
+
+    background:var(--card);
+
+    border-radius:24px;
+
+    padding:40px;
+
+    box-shadow:var(--shadow);
+
+    transition:.3s;
 }
 
-input, select, textarea {
-    width: 100%;
-    height: 42px;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: none;
-    background: #808080;
-    font-weight: bold;
-    font-size: 14px;
+/* =========================
+   FORM
+========================= */
+
+label{
+
+    display:block;
+
+    margin-top:18px;
+    margin-bottom:8px;
+
+    font-size:14px;
+    font-weight:600;
 }
 
-/* MAIÚSCULO VISUAL */
-input[type="text"], textarea {
-    text-transform: uppercase;
+input,
+select,
+textarea{
+
+    width:100%;
+
+    border:1px solid var(--border);
+
+    background:var(--input);
+
+    color:var(--text);
+
+    border-radius:14px;
+
+    padding:14px;
+
+    font-size:15px;
+
+    transition:.2s;
 }
 
-textarea {
-    height: 80px;
-    resize: none;
+textarea{
+
+    resize:none;
+    min-height:100px;
 }
 
-/* remover setas */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-input[type=number] { -moz-appearance: textfield; }
+input:focus,
+select:focus,
+textarea:focus{
 
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    background: #FFFFFF;
-}
+    outline:none;
 
-/* BOTÃO */
-button {
-    margin-top: 25px;
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(90deg, #FF0000, #990000);
-    color: white;
-    border: none;
-    font-weight: bold;
-    border-radius: 5px;
+    border-color:#4285F4;
+
+    box-shadow:
+        0 0 0 4px rgba(66,133,244,.15);
+
+    background:white;
 }
 
-/* aviso */
-.aviso {
-    margin-top: 20px;
-    text-align: center;
-    color: #FF0000;
-    font-weight: bold;
+/* =========================
+   BOTÃO
+========================= */
+
+button{
+
+    width:100%;
+
+    margin-top:30px;
+
+    border:none;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        90deg,
+        var(--primary2),
+        #B91C1C
+    );
+
+    color:white;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:var(--shadow);
 }
 
-/* footer */
-footer {
-    background: black;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    border-top: 2px solid red;
+button:hover{
+
+    transform:translateY(-2px);
+
+    opacity:.95;
 }
 
-/* RESPONSIVO */
-@media (max-width: 600px) {
-    header { flex-direction: column; }
-    .logo { height: 80px; }
-    header h2 { font-size: 18px; margin: 10px 0; }
-    .container { margin: 10px; padding: 20px; }
+/* =========================
+   AVISO
+========================= */
+
+.aviso{
+
+    margin-top:24px;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    background:rgba(255,0,0,.08);
+
+    color:#DC2626;
+
+    text-align:center;
+
+    font-size:14px;
+    font-weight:600;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    margin-top:40px;
+
+    text-align:center;
+
+    padding:20px;
+
+    color:#6B7280;
+
+    font-size:13px;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media(max-width:768px){
+
+    header{
+
+        flex-direction:column;
+        gap:16px;
+
+        text-align:center;
+    }
+
+    .logo{
+
+        height:70px;
+    }
+
+    .container{
+
+        margin:20px;
+        padding:24px;
+    }
+
 }
 
 </style>
-
 <script>
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxkQnH7aHsnVgNOkiyByxr3llq4DfSNqUroXEne40e4md0a8K-gXJjHs4AJcm8NJJM/exec";
